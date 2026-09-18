@@ -4,7 +4,7 @@ import { VehicleFeature } from "../../../src/drivers/types/driver";
 import { setupApp } from "../../../src/setup-app";
 import { HttpStatuses } from "../../../src/core/types/http-statuses";
 import { DriverInputDto } from "../../../src/drivers/dto/driver.input.dto";
-import { DRIVERS_PATH } from "../../../src/drivers/constants/drivers.paths";
+import {DRIVERS_PATH } from "../../../src/drivers/constants/drivers.paths";
 import { TESTING_PATH } from "../../../src/testing/constants/testing.paths";
 
 describe('Driver API validation check', () => {
@@ -72,7 +72,9 @@ describe('Driver API validation check', () => {
     });
 
     it('❌ should not update driver when incorrect data passed; PUT /api/drivers/:id', async () => {
-        const { body: { id: createdDriverId } } = await request(app)
+        const {
+            body: { id: createdDriverId }
+        } = await request(app)
             .post(DRIVERS_PATH)
             .send({ ...correctTestDriverData })
             .expect(HttpStatuses.Created);
@@ -123,17 +125,33 @@ describe('Driver API validation check', () => {
         });
     });
 
+    it('❌ should not update driver when incorrect features passed; PUT /api/drivers/:id', async () => {
+        const {
+            body: { id: createdDriverId }
+        } = await request(app)
+            .post(DRIVERS_PATH)
+            .send({ ...correctTestDriverData })
+            .expect(HttpStatuses.Created);
 
+        await request(app)
+            .put(`${DRIVERS_PATH}/${createdDriverId}`)
+            .send({
+                ...correctTestDriverData,
+                vehicleFeatures: [
+                    VehicleFeature.ChildSeat,
+                    'invalid-feature',
+                    VehicleFeature.WiFi,
+                ]
+            })
+            .expect(HttpStatuses.BadRequest);
 
+        const driverResponse = await request(app)
+            .get(`${DRIVERS_PATH}/${createdDriverId}`);
 
-
-
-
-
-
-
-
-
-
-
-})
+        expect(driverResponse.body).toEqual({
+            ...correctTestDriverData,
+            id: createdDriverId,
+            createdAt: expect.any(String)
+        });
+    });
+});
