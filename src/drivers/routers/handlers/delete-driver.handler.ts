@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
-import { db } from "../../../db/in-memory.db";
 import { HttpStatuses } from "../../../core/types/http-statuses";
 import { createErrorMessage } from "../../../core/utils/error.utils";
+import { driversRepository } from "../../repository/drivers.repository";
 
 export function deleteDriverHandler(req: Request<{ id: string }>, res: Response) {
-    const index = db.drivers.findIndex((d) => d.id === +req.params.id);
 
-    if (index === -1) {
+    // Репозиторий вернёт false, если водитель с таким id не найден.
+    const isDeleted = driversRepository.delete(+req.params.id);
+
+    if (!isDeleted) {
         res
             .status(HttpStatuses.NotFound)
             .send(
@@ -15,6 +17,5 @@ export function deleteDriverHandler(req: Request<{ id: string }>, res: Response)
         return;
     }
 
-    db.drivers.splice(index, 1);
     res.sendStatus(HttpStatuses.NoContent);
 }
