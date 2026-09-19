@@ -4,7 +4,7 @@ import { HttpStatus } from "../../../core/types/http-statuses";
 import { createErrorMessages } from "../../../core/utils/error.utils";
 import { validateDriverInputDto } from "../../validation/driver-input-dto.validation";
 import { Driver } from "../../types/driver";
-import { driversRepository } from "../../repository/drivers.repository";
+import { driversRepository } from "../../repositoties/drivers.repository";
 
 export function createDriverHandler(req: Request<{}, {}, DriverInputDto>, res: Response) {
     // Сначала валидируем тело запроса вручную.

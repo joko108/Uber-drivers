@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/types/http-statuses";
 import { createErrorMessages } from "../../../core/utils/error.utils";
-import {driversRepository} from "../../repository/drivers.repository";
+import { driversRepository } from "../../repositoties/drivers.repository";
 
 export function getDriverHandler(req: Request<{ id: string }>, res: Response) {
 

@@ -3,7 +3,7 @@ import { DriverInputDto } from "../../dto/driver.input.dto";
 import { HttpStatus } from "../../../core/types/http-statuses";
 import { createErrorMessages } from "../../../core/utils/error.utils";
 import { validateDriverInputDto } from "../../validation/driver-input-dto.validation";
-import {driversRepository} from "../../repository/drivers.repository";
+import { driversRepository } from "../../repositoties/drivers.repository";
 
 export function updateDriverHandler(
     req: Request<{ id: string }, {}, DriverInputDto>,
