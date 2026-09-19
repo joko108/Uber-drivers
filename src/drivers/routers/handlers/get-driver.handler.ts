@@ -1,19 +1,20 @@
-import { Request, Response } from 'express';
-import { HttpStatus } from '../../../core/types/http-statuses';
-import { createErrorMessages } from '../../../core/utils/error.utils';
-import { driversRepository } from "../../repositoties/drivers.repository";
+import { Request, Response } from "express";
+import { HttpStatuses } from "../../../core/types/http-statuses";
+import { createErrorMessage } from "../../../core/utils/error.utils";
+import {driversRepository} from "../../repository/drivers.repository";
 
 export function getDriverHandler(req: Request<{ id: string }>, res: Response) {
+
     const driver = driversRepository.findById(+req.params.id);
 
     if (!driver) {
         res
-            .status(HttpStatus.NotFound)
+            .status(HttpStatuses.NotFound)
             .send(
-                createErrorMessages([{ field: 'id', message: 'Driver not found' }]),
+                createErrorMessage([{ field: 'id', message: 'Driver not found' }])
             );
         return;
     }
 
-    res.status(HttpStatus.Ok).send(driver);
+    res.status(HttpStatuses.Ok).send(driver);
 }

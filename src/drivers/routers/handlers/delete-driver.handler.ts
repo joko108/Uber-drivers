@@ -1,24 +1,21 @@
-import { Request, Response } from 'express';
-import { HttpStatus } from '../../../core/types/http-statuses';
-import { createErrorMessages } from '../../../core/utils/error.utils';
-import { driversRepository } from "../../repositoties/drivers.repository";
+import { Request, Response } from "express";
+import { HttpStatuses } from "../../../core/types/http-statuses";
+import { createErrorMessage } from "../../../core/utils/error.utils";
+import { driversRepository } from "../../repository/drivers.repository";
 
+export function deleteDriverHandler(req: Request<{ id: string }>, res: Response) {
 
-export function deleteDriverHandler(
-    req: Request<{ id: string }>,
-    res: Response,
-) {
     // Репозиторий вернёт false, если водитель с таким id не найден.
     const isDeleted = driversRepository.delete(+req.params.id);
 
     if (!isDeleted) {
         res
-            .status(HttpStatus.NotFound)
+            .status(HttpStatuses.NotFound)
             .send(
-                createErrorMessages([{ field: 'id', message: 'Driver not found' }]),
+                createErrorMessage([{ field: 'id', message: 'Driver not found' }])
             );
         return;
     }
 
-    res.sendStatus(HttpStatus.NoContent);
+    res.sendStatus(HttpStatuses.NoContent);
 }
