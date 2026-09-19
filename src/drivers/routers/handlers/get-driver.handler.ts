@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { HttpStatuses } from "../../../core/types/http-statuses";
-import { createErrorMessage } from "../../../core/utils/error.utils";
+import { HttpStatus } from "../../../core/types/http-statuses";
+import { createErrorMessages } from "../../../core/utils/error.utils";
 import {driversRepository} from "../../repository/drivers.repository";
 
 export function getDriverHandler(req: Request<{ id: string }>, res: Response) {
@@ -9,12 +9,12 @@ export function getDriverHandler(req: Request<{ id: string }>, res: Response) {
 
     if (!driver) {
         res
-            .status(HttpStatuses.NotFound)
+            .status(HttpStatus.NotFound)
             .send(
-                createErrorMessage([{ field: 'id', message: 'Driver not found' }])
+                createErrorMessages([{ field: 'id', message: 'Driver not found' }])
             );
         return;
     }
 
-    res.status(HttpStatuses.Ok).send(driver);
+    res.status(HttpStatus.Ok).send(driver);
 }

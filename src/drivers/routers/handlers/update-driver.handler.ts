@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { DriverInputDto } from "../../dto/driver.input.dto";
-import { HttpStatuses } from "../../../core/types/http-statuses";
-import { createErrorMessage } from "../../../core/utils/error.utils";
-import { validateDriverInput } from "../../validation/driver-input-dto.validation";
+import { HttpStatus } from "../../../core/types/http-statuses";
+import { createErrorMessages } from "../../../core/utils/error.utils";
+import { validateDriverInputDto } from "../../validation/driver-input-dto.validation";
 import {driversRepository} from "../../repository/drivers.repository";
 
 export function updateDriverHandler(
@@ -10,10 +10,10 @@ export function updateDriverHandler(
     res: Response
 ) {
 
-    const errors = validateDriverInput(req.body);
+    const errors = validateDriverInputDto(req.body);
 
     if (errors.length > 0) {
-        res.status(HttpStatuses.BadRequest).send(createErrorMessage(errors));
+        res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
         return;
     }
 
@@ -21,12 +21,12 @@ export function updateDriverHandler(
 
     if (!isUpdated) {
         res
-            .status(HttpStatuses.NotFound)
+            .status(HttpStatus.NotFound)
             .send(
-                createErrorMessage([{ field: 'id', message: 'Driver not found' }])
+                createErrorMessages([{ field: 'id', message: 'Driver not found' }])
             );
         return;
     }
 
-    res.sendStatus(HttpStatuses.NoContent);
+    res.sendStatus(HttpStatus.NoContent);
 }
