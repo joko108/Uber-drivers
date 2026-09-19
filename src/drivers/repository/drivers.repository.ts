@@ -1,15 +1,20 @@
 import { Driver } from "../types/driver";
 import { db } from "../../db/in-memory.db";
 
+// Репозиторий (DAL) отвечает только за доступ к данным в in-memory-хранилище.
+// Он не знает про HTTP и не решает, что делать при "не найдено":
+// операции изменения возвращают boolean, а решение о статусе ответа принимает handler.
 export const driversRepository = {
     findAll(): Driver[] {
         return db.drivers;
     },
 
     findById(id: number): Driver | null {
+        // Если ничего не нашли, find вернет undefined - приводим к null.
         return db.drivers.find((d) => d.id === id) ?? null;
     },
 
+    // Принимает данные поля без id (id генерируем здесь) и возвращает созданного водителя
     create(newDriver: Omit<Driver, 'id'>): Driver {
         const lastDriver = db.drivers[db.drivers.length - 1];
         const created: Driver = {
@@ -21,6 +26,8 @@ export const driversRepository = {
         return created;
     },
 
+    // Принимает данные поля (без служебных id/createdAt).
+    // Возвращает true, если водитель найден и обновлен, иначе false.
     update(id: number, driver: Omit<Driver, 'id' | 'createdAt'>): boolean {
         const index = db.drivers.findIndex((d) => d.id === id);
 
@@ -28,10 +35,12 @@ export const driversRepository = {
             return false;
         }
 
+        // Обновляем поля, сохраняя служебные id и createdAt.
         db.drivers[index] = { ...db.drivers[index], ...driver };
         return true;
     },
 
+    // Возвращает true, если водитель найден и удалён, иначе false.
     delete(id: number): boolean {
         const index = db.drivers.findIndex((d) => d.id === id);
 

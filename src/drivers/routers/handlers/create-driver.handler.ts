@@ -15,6 +15,7 @@ export function createDriverHandler(req: Request<{}, {}, DriverInputDto>, res: R
         return;
     }
 
+    // Собираем доменные поля (id проставит репозиторий), createdAt — сейчас.
     const newDriver: Omit<Driver, 'id'> = {
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,

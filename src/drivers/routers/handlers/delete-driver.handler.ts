@@ -5,6 +5,7 @@ import { driversRepository } from "../../repository/drivers.repository";
 
 export function deleteDriverHandler(req: Request<{ id: string }>, res: Response) {
 
+    // Репозиторий вернёт false, если водитель с таким id не найден.
     const isDeleted = driversRepository.delete(+req.params.id);
 
     if (!isDeleted) {
