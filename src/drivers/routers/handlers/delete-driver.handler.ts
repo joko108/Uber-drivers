@@ -1,20 +1,24 @@
-import { Request, Response } from "express";
-import { db } from "../../../db/in-memory.db";
-import { HttpStatuses } from "../../../core/types/http-statuses";
-import { createErrorMessage } from "../../../core/utils/error.utils";
+import { Request, Response } from 'express';
+import { HttpStatus } from '../../../core/types/http-statuses';
+import { createErrorMessages } from '../../../core/utils/error.utils';
+import { driversRepository } from "../../repositoties/drivers.repository";
 
-export function deleteDriverHandler(req: Request<{ id: string }>, res: Response) {
-    const index = db.drivers.findIndex((d) => d.id === +req.params.id);
 
-    if (index === -1) {
+export function deleteDriverHandler(
+    req: Request<{ id: string }>,
+    res: Response,
+) {
+    // Репозиторий вернёт false, если водитель с таким id не найден.
+    const isDeleted = driversRepository.delete(+req.params.id);
+
+    if (!isDeleted) {
         res
-            .status(HttpStatuses.NotFound)
+            .status(HttpStatus.NotFound)
             .send(
-                createErrorMessage([{ field: 'id', message: 'Driver not found' }])
+                createErrorMessages([{ field: 'id', message: 'Driver not found' }]),
             );
         return;
     }
 
-    db.drivers.splice(index, 1);
-    res.sendStatus(HttpStatuses.NoContent);
+    res.sendStatus(HttpStatus.NoContent);
 }

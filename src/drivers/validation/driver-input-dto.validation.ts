@@ -13,7 +13,7 @@ const isInvalidString = (value: string, min: number, max: number): boolean =>
 
 // Ручная валидация тела запроса (на этом этапе без сторонних библиотек).
 // Возвращает список ошибок; пустой список означает, что данные корректны.
-export const validateDriverInput = (data: DriverInputDto): ValidationError[] => {
+export const validateDriverInputDto = (data: DriverInputDto): ValidationError[] => {
    const errors: ValidationError[] = [];
 
    if (isInvalidString(data.name, 2, 15)) {

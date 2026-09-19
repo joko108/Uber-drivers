@@ -1,33 +1,32 @@
-import { Request, Response } from "express";
-import { DriverInputDto } from "../../dto/driver.input.dto";
-import { db } from "../../../db/in-memory.db";
-import { HttpStatuses } from "../../../core/types/http-statuses";
-import { createErrorMessage } from "../../../core/utils/error.utils";
-import { validateDriverInput } from "../../validation/driver-input-dto.validation";
+import { Request, Response } from 'express';
+import { DriverInputDto } from '../../dto/driver.input.dto';
+import { HttpStatus } from '../../../core/types/http-statuses';
+import { createErrorMessages } from '../../../core/utils/error.utils';
+import { validateDriverInputDto } from '../../validation/driver-input-dto.validation';
+import { driversRepository } from "../../repositoties/drivers.repository";
 
 export function updateDriverHandler(
     req: Request<{ id: string }, {}, DriverInputDto>,
-    res: Response
+    res: Response,
 ) {
-    const index = db.drivers.findIndex((d) => d.id === +req.params.id);
+    const errors = validateDriverInputDto(req.body);
 
-    if (index === -1) {
+    if (errors.length > 0) {
+        res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
+        return;
+    }
+
+    // Репозиторий вернёт false, если водитель с таким id не найден.
+    const isUpdated = driversRepository.update(+req.params.id, req.body);
+
+    if (!isUpdated) {
         res
-            .status(HttpStatuses.NotFound)
+            .status(HttpStatus.NotFound)
             .send(
-                createErrorMessage([{ field: 'id', message: 'Driver not found' }])
+                createErrorMessages([{ field: 'id', message: 'Driver not found' }]),
             );
         return;
     }
 
-    const errors = validateDriverInput(req.body);
-
-    if (errors.length > 0) {
-        res.status(HttpStatuses.BadRequest).send(createErrorMessage(errors));
-        return;
-    }
-
-    db.drivers[index] = { ...db.drivers[index], ...req.body };
-
-    res.sendStatus(HttpStatuses.NoContent);
+    res.sendStatus(HttpStatus.NoContent);
 }
