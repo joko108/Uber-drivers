@@ -2,7 +2,7 @@ import express from "express";
 import request from 'supertest';
 import { VehicleFeature } from "../../../src/drivers/types/driver";
 import { setupApp } from "../../../src/setup-app";
-import { HttpStatuses } from "../../../src/core/types/http-statuses";
+import { HttpStatus } from "../../../src/core/types/http-statuses";
 import { DriverInputDto } from "../../../src/drivers/dto/driver.input.dto";
 import {DRIVERS_PATH } from "../../../src/drivers/constants/drivers.paths";
 import { TESTING_PATH } from "../../../src/testing/constants/testing.paths";
@@ -26,7 +26,7 @@ describe('Driver API validation check', () => {
     beforeAll(async () => {
         await request(app)
             .delete(`${TESTING_PATH}/all-data`)
-            .expect(HttpStatuses.NoContent)
+            .expect(HttpStatus.NoContent)
     });
 
     it('❌ should not create when incorrect body passed; POST /api/drivers', async () => {
@@ -39,7 +39,7 @@ describe('Driver API validation check', () => {
                 email: 'invalid email',
                 vehicleMake: '',
             })
-            .expect(HttpStatuses.BadRequest);
+            .expect(HttpStatus.BadRequest);
 
         expect(invalidDataSet1.body.errorMessage).toHaveLength(4);
 
@@ -52,7 +52,7 @@ describe('Driver API validation check', () => {
                 vehicleYear: 'year',
                 vehicleLicensePlate: '',
             })
-            .expect(HttpStatuses.BadRequest);
+            .expect(HttpStatus.BadRequest);
 
         expect(invalidDataSet2.body.errorMessage).toHaveLength(4);
 
@@ -62,7 +62,7 @@ describe('Driver API validation check', () => {
                 ...correctTestDriverData,
                 name: 'A',
             })
-            .expect(HttpStatuses.BadRequest);
+            .expect(HttpStatus.BadRequest);
 
         expect(invalidDataSet3.body.errorMessage).toHaveLength(1);
 
@@ -77,7 +77,7 @@ describe('Driver API validation check', () => {
         } = await request(app)
             .post(DRIVERS_PATH)
             .send({ ...correctTestDriverData })
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
 
         const invalidDataSet1 = await request(app)
             .put(`${DRIVERS_PATH}/${createdDriverId}`)
@@ -88,7 +88,7 @@ describe('Driver API validation check', () => {
                 email: 'invalid email',
                 vehicleMake: '',
             })
-            .expect(HttpStatuses.BadRequest);
+            .expect(HttpStatus.BadRequest);
 
         expect(invalidDataSet1.body.errorMessage).toHaveLength(4);
 
@@ -101,7 +101,7 @@ describe('Driver API validation check', () => {
                 vehicleYear: 'year',
                 vehicleLicensePlate: '',
             })
-            .expect(HttpStatuses.BadRequest);
+            .expect(HttpStatus.BadRequest);
 
         expect(invalidDataSet2.body.errorMessage).toHaveLength(4);
 
@@ -111,7 +111,7 @@ describe('Driver API validation check', () => {
                 ...correctTestDriverData,
                 name: 'A',
             })
-            .expect(HttpStatuses.BadRequest);
+            .expect(HttpStatus.BadRequest);
 
         expect(invalidDataSet3.body.errorMessage).toHaveLength(1);
 
@@ -131,7 +131,7 @@ describe('Driver API validation check', () => {
         } = await request(app)
             .post(DRIVERS_PATH)
             .send({ ...correctTestDriverData })
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
 
         await request(app)
             .put(`${DRIVERS_PATH}/${createdDriverId}`)
@@ -143,7 +143,7 @@ describe('Driver API validation check', () => {
                     VehicleFeature.WiFi,
                 ]
             })
-            .expect(HttpStatuses.BadRequest);
+            .expect(HttpStatus.BadRequest);
 
         const driverResponse = await request(app)
             .get(`${DRIVERS_PATH}/${createdDriverId}`);

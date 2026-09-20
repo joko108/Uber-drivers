@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express from "express";
 import { setupApp } from "../../../src/setup-app";
-import { HttpStatuses } from "../../../src/core/types/http-statuses";
+import { HttpStatus } from "../../../src/core/types/http-statuses";
 import { DriverInputDto } from "../../../src/drivers/dto/driver.input.dto";
 import { DRIVERS_PATH } from "../../../src/drivers/constants/drivers.paths";
 import { TESTING_PATH } from "../../../src/testing/constants/testing.paths";
@@ -25,7 +25,7 @@ describe('Driver API', () => {
     beforeAll(async () => {
         await request(app)
             .delete(`${TESTING_PATH}/all-data`)
-            .expect(HttpStatuses.NoContent);
+            .expect(HttpStatus.NoContent);
     });
 
     it('✅ should create driver; POST /api/drivers', async () => {
@@ -39,23 +39,23 @@ describe('Driver API', () => {
         await request(app)
             .post(DRIVERS_PATH)
             .send(newDriver)
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
     });
 
     it('✅ should return drivers list: GET /api/drivers', async () => {
         await request(app)
             .post(DRIVERS_PATH)
             .send({ ...testDriverData, name: 'Another Driver' })
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
 
         await request(app)
             .post(DRIVERS_PATH)
             .send({ ...testDriverData, name: 'Another Driver2' })
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
 
         const driverListResponse = await request(app)
             .get(DRIVERS_PATH)
-            .expect(HttpStatuses.Ok);
+            .expect(HttpStatus.Ok);
 
         expect(driverListResponse.body).toBeInstanceOf(Array);
         expect(driverListResponse.body.length).toBeGreaterThanOrEqual(2);
@@ -65,11 +65,11 @@ describe('Driver API', () => {
         const createResponse = await request(app)
             .post(DRIVERS_PATH)
             .send({...testDriverData, name: 'Another Driver'})
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
 
         const getResponse = await request(app)
             .get(`${DRIVERS_PATH}/${createResponse.body.id}`)
-            .expect(HttpStatuses.Ok);
+            .expect(HttpStatus.Ok);
 
         expect(getResponse.body).toEqual({
             ...createResponse.body,
@@ -82,7 +82,7 @@ describe('Driver API', () => {
         const createResponse = await request(app)
             .post(DRIVERS_PATH)
             .send({...testDriverData, name: 'Another Driver'})
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
 
         const driverUpdateData: DriverInputDto = {
             ...testDriverData,
@@ -95,7 +95,7 @@ describe('Driver API', () => {
         await request(app)
             .put(`${DRIVERS_PATH}/${createResponse.body.id}`)
             .send(driverUpdateData)
-            .expect(HttpStatuses.NoContent);
+            .expect(HttpStatus.NoContent);
 
         const driverResponse = await request(app)
             .get(`${DRIVERS_PATH}/${createResponse.body.id}`);
@@ -111,15 +111,15 @@ describe('Driver API', () => {
         const res = await request(app)
             .post(DRIVERS_PATH)
             .send({...testDriverData, name: 'Another Driver'})
-            .expect(HttpStatuses.Created);
+            .expect(HttpStatus.Created);
 
         await request(app)
             .delete(`${DRIVERS_PATH}/${res.body.id}`)
-            .expect(HttpStatuses.NoContent);
+            .expect(HttpStatus.NoContent);
 
         const driverResponse = await request(app).get(`${DRIVERS_PATH}/${res.body.id}`);
 
-        expect(driverResponse.status).toBe(HttpStatuses.NotFound);
+        expect(driverResponse.status).toBe(HttpStatus.NotFound);
 
     });
 });

@@ -3,7 +3,7 @@ import { driversRouter } from "./drivers/routers/drivers.router";
 import { TESTING_PATH } from "./testing/constants/testing.paths";
 import { DRIVERS_PATH } from "./drivers/constants/drivers.paths";
 import { testingRouter } from "./testing/router/testing.router";
-import {HttpStatuses} from "./core/types/http-statuses";
+import {HttpStatus} from "./core/types/http-statuses";
 
 export const setupApp = (app: Express) => {
     // Парсим JSON
@@ -11,7 +11,7 @@ export const setupApp = (app: Express) => {
 
     // Health-check: простой ответ, что сервер жив
     app.get('/', (req: Request, res: Response) => {
-        res.status(HttpStatuses.Ok).send('Hello World');
+        res.status(HttpStatus.Ok).send('Hello World');
     });
 
     // Каждый модуль подключается к своему базовому пути
