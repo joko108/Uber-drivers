@@ -1,10 +1,9 @@
 import request from 'supertest';
-import express from "express";
-import { setupApp } from "../../../src/setup-app";
-import { HttpStatus } from "../../../src/core/types/http-statuses";
-import { DriverInputDto } from "../../../src/drivers/dto/driver.input.dto";
-import { DRIVERS_PATH } from "../../../src/drivers/constants/drivers.paths";
-import { TESTING_PATH } from "../../../src/testing/constants/testing.paths";
+import express from 'express';
+import { setupApp } from '../../../src/setup-app';
+import { HttpStatus } from '../../../src/core/types/http-statuses';
+import { DriverInputDto } from '../../../src/drivers/dto/driver.input.dto';
+import { DRIVERS_PATH } from '../../../src/drivers/constants/drivers.paths';
 
 describe('Driver API', () => {
     const app = express();
@@ -24,7 +23,7 @@ describe('Driver API', () => {
 
     beforeAll(async () => {
         await request(app)
-            .delete(`${TESTING_PATH}/all-data`)
+            .delete('/api/testing/all-data')
             .expect(HttpStatus.NoContent);
     });
 
@@ -42,7 +41,7 @@ describe('Driver API', () => {
             .expect(HttpStatus.Created);
     });
 
-    it('✅ should return drivers list: GET /api/drivers', async () => {
+    it('✅ should return drivers list; GET /api/drivers', async () => {
         await request(app)
             .post(DRIVERS_PATH)
             .send({ ...testDriverData, name: 'Another Driver' })
@@ -61,10 +60,10 @@ describe('Driver API', () => {
         expect(driverListResponse.body.length).toBeGreaterThanOrEqual(2);
     });
 
-    it('✅ should return driver by id: GET /api/drivers/:id', async () => {
+    it('✅ should return driver by id; GET /api/drivers/:id', async () => {
         const createResponse = await request(app)
             .post(DRIVERS_PATH)
-            .send({...testDriverData, name: 'Another Driver'})
+            .send({ ...testDriverData, name: 'Another Driver' })
             .expect(HttpStatus.Created);
 
         const getResponse = await request(app)
@@ -74,19 +73,19 @@ describe('Driver API', () => {
         expect(getResponse.body).toEqual({
             ...createResponse.body,
             id: expect.any(Number),
-            createdAt: expect.any(String)
+            createdAt: expect.any(String),
         });
     });
 
     it('✅ should update driver; PUT /api/drivers/:id', async () => {
         const createResponse = await request(app)
             .post(DRIVERS_PATH)
-            .send({...testDriverData, name: 'Another Driver'})
+            .send({ ...testDriverData, name: 'Another Driver' })
             .expect(HttpStatus.Created);
 
         const driverUpdateData: DriverInputDto = {
             ...testDriverData,
-            name: 'Update name',
+            name: 'Updated Name',
             phoneNumber: '999-888-7777',
             email: 'updated@example.com',
             vehicleMake: 'Tesla',
@@ -97,29 +96,30 @@ describe('Driver API', () => {
             .send(driverUpdateData)
             .expect(HttpStatus.NoContent);
 
-        const driverResponse = await request(app)
-            .get(`${DRIVERS_PATH}/${createResponse.body.id}`);
+        const driverResponse = await request(app).get(
+            `${DRIVERS_PATH}/${createResponse.body.id}`,
+        );
 
         expect(driverResponse.body).toEqual({
             ...driverUpdateData,
             id: createResponse.body.id,
-            createdAt: expect.any(String)
+            createdAt: expect.any(String),
         });
     });
 
-    it('✅ DELETE /api/drivers/:id', async () => {
+    it(`✅ DELETE /api/drivers/:id and check after NOT FOUND`, async () => {
         const res = await request(app)
             .post(DRIVERS_PATH)
-            .send({...testDriverData, name: 'Another Driver'})
+            .send({ ...testDriverData, name: 'Another Driver' })
             .expect(HttpStatus.Created);
 
         await request(app)
             .delete(`${DRIVERS_PATH}/${res.body.id}`)
             .expect(HttpStatus.NoContent);
 
-        const driverResponse = await request(app).get(`${DRIVERS_PATH}/${res.body.id}`);
-
+        const driverResponse = await request(app).get(
+            `${DRIVERS_PATH}/${res.body.id}`,
+        );
         expect(driverResponse.status).toBe(HttpStatus.NotFound);
-
     });
 });
