@@ -1,13 +1,12 @@
 import express from 'express';
 import { setupApp } from "./setup-app";
+import { SETTINGS } from "./config";
 
 // Создание приложения
 const app = express();
 setupApp(app);
 
-// process - это глобальный объект в Node.js, который содержит информацию о текущем процессе выполнения.
-// process.env - это объект, содержащий все переменные окружения, доступные нашему приложению.
-const PORT = process.env.PORT || 3000;
+const PORT = SETTINGS.PORT;
 
 // Запуск сервера
 app.listen(PORT, () => {

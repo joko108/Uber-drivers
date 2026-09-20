@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "tsc -w",
     "dev": "nodemon --inspect dist/index.js",
-    "jest": "jest -i"
+    "jest": "jest -i",
+    "jest:coverage": "jest -i --coverage"
   },
   "keywords": [],
   "author": "",
