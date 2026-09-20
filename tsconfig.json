@@ -4,6 +4,7 @@
     "lib": ["es2023"],
     "module": "commonjs",
     "outDir": "./dist",
+    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
 
