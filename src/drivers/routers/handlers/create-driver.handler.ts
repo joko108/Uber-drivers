@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { DriverInputDto } from "../../dto/driver.input.dto";
 import { HttpStatus } from "../../../core/types/http-statuses";
 import { Driver } from "../../types/driver";
-import { driversRepository } from "../../repositoties/drivers.repository";
+import { driversRepository } from "../../repositories/drivers.repository";
 
 export function createDriverHandler(
     req: Request<{}, {}, DriverInputDto>,

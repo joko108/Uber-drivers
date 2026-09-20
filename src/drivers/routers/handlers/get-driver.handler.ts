@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { HttpStatus } from "../../../core/types/http-statuses";
 import { createErrorMessages } from "../../../core/middlewares/validation/input-validation-result.middleware";
-import { driversRepository } from "../../repositoties/drivers.repository";
+import { driversRepository } from "../../repositories/drivers.repository";
 
 export function getDriverHandler(req: Request<{ id: string }>, res: Response) {
     const driver = driversRepository.findById(+req.params.id);
