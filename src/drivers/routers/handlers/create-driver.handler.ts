@@ -1,21 +1,14 @@
 import { Request, Response } from "express";
 import { DriverInputDto } from "../../dto/driver.input.dto";
 import { HttpStatus } from "../../../core/types/http-statuses";
-import { createErrorMessages } from "../../../core/utils/error.utils";
-import { validateDriverInputDto } from "../../validation/driver-input-dto.validation";
 import { Driver } from "../../types/driver";
 import { driversRepository } from "../../repositoties/drivers.repository";
 
-export function createDriverHandler(req: Request<{}, {}, DriverInputDto>, res: Response) {
-    // Сначала валидируем тело запроса вручную.
-    const errors = validateDriverInputDto(req.body);
-
-    if (errors.length > 0) {
-        res.status(HttpStatus.BadRequest).send(createErrorMessages(errors));
-        return;
-    }
-
-    // Собираем доменные поля (id проставит репозиторий), createdAt — сейчас.
+export function createDriverHandler(
+    req: Request<{}, {}, DriverInputDto>,
+    res: Response
+) {
+    // Тело запроса уже проверено middleware-валидаторами, поэтому здесь только создаем.
     const newDriver: Omit<Driver, 'id'> = {
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,
