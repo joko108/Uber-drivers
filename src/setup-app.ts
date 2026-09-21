@@ -3,7 +3,7 @@ import { driversRouter } from "./drivers/routers/drivers.router";
 import { TESTING_PATH } from "./testing/constants/testing.paths";
 import { DRIVERS_PATH } from "./drivers/constants/drivers.paths";
 import { testingRouter } from "./testing/router/testing.router";
-import {HttpStatus} from "./core/types/http-statuses";
+import { HttpStatus } from "./core/types/http-statuses";
 
 export const setupApp = (app: Express) => {
     // Парсим JSON
