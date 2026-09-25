@@ -84,7 +84,7 @@ describe('Driver API body validation check', () => {
         expect(driverListResponse.body).toHaveLength(0);
     });
 
-    it('❌ should not update driver when incorrect data passed; PUT /api/drivers/:id', async () => {
+    it('❌ should not update drivers when incorrect data passed; PUT /api/drivers/:id', async () => {
         const {
             body: { id: createdDriverId },
         } = await request(app)
@@ -143,7 +143,7 @@ describe('Driver API body validation check', () => {
         });
     });
 
-    it('❌ should not update driver when incorrect features passed; PUT /api/drivers/:id', async () => {
+    it('❌ should not update drivers when incorrect features passed; PUT /api/drivers/:id', async () => {
         const {
             body: { id: createdDriverId },
         } = await request(app)

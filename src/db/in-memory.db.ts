@@ -1,5 +1,5 @@
 import { Driver, VehicleFeature } from "../drivers/types/driver";
-import { Ride } from "../riders/types/ride";
+import { Ride } from "../rides/types/ride";
 
 export const db = {
     drivers: <Driver[]>[
